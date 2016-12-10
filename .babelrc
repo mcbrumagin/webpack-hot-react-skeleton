@@ -1,0 +1,11 @@
+{
+  "presets" : ["es2015", "es2017", "react"],
+  "env": {
+    "production": {
+      "plugins": [
+        "transform-react-inline-elements",
+        "transform-react-constant-elements"
+      ]
+    }
+  }
+}

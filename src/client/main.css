@@ -1,0 +1,14 @@
+body {
+  background-color: #000;
+  color: #fff;
+}
+
+[id=app] {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+}
+
+.content {
+  align-self: center;
+}
