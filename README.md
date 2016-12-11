@@ -29,6 +29,5 @@ Run `npm run production` to install dependencies and start the server
 Commands are `npm run package-windows` and `npm run production-windows`
 
 ###  Todo
-- Automatically refresh on dev if the hot loader connection is severed
 - Wire up reactive datasource (MongoDB and/or PostgresSQL)
 - Unit and integration tests

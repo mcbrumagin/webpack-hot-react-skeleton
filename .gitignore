@@ -3,3 +3,4 @@ dev
 prod
 npm-debug.log
 yarn.lock
+rethinkdb_data

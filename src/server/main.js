@@ -1,9 +1,12 @@
 /* @flow */
 'use strict'
 
+import http from 'http'
 import express from 'express'
+import socketio from 'socket.io'
 import fs from 'fs'
-import { isEmail } from '../shared/validators'
+import routers from './routes/routers'
+import sockets from './sockets/sockets'
 
 const app = express()
 let port: number
@@ -30,17 +33,17 @@ app.get('/', (req, res) => {
   })
 })
 
-app.post('/validation-test', (req, res) => {
-  let data = ''
-  req.on('readable', () => {
-    let chunk: string
-    while (null !== (chunk = req.read()) ) data += chunk
-  })
-  req.on('end', () => {
-    let form = JSON.parse(data)
-    if (!isEmail(form.email)) res.status(400).send('Invalid email')
-    else res.send('OK')
-  })
+for (let router of routers) {
+  app.use(router)
+}
+
+const server = http.createServer(app)
+
+const io = socketio(server)
+io.on('connection', (socket) => {
+  for (let handler of sockets) {
+    handler(socket)
+  }
 })
 
-app.listen(port, () => console.log(`Listening on port ${port}`))
+server.listen(port, () => console.log(`Listening on port ${port}`))
