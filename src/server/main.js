@@ -4,46 +4,48 @@
 import http from 'http'
 import express from 'express'
 import socketio from 'socket.io'
-import fs from 'fs'
+
 import routers from './routes/routers'
 import sockets from './sockets/sockets'
 
+/*
+// TODO: REMOVE
+import axios from 'axios'
+
+setTimeout(() => {
+  axios.get('http://127.0.0.1:3000/validation-lol', {email:'test@lolzzz'})
+    .then((res) => console.log('yeahhhhh', res))
+    .catch((err) => console.log('errrr', err.message, err.response.data))
+}, 5000)
+*/
+
 const app = express()
 let port: number
-let mainHtmlPath: string
 
 if (process.env.NODE_ENV === 'production') {
-  mainHtmlPath = './client/main.html'
-  port = 80
-
+  port = process.env.npm_package_config_productionPort || 80
   app.use(express.static('./client/'))
-} else {
-  mainHtmlPath = './src/client/main.html'
-  port = 3000
+}
+else {
+  const {
+    devMiddlware,
+    hotMiddleware
+  } = require('./middleware')
 
-  const { devMiddlware, hotMiddleware } = require('./webpack-middleware')
+  port = process.env.npm_package_config_port || 3000
   app.use(devMiddlware)
   app.use(hotMiddleware)
 }
 
-app.get('/', (req, res) => {
-  fs.readFile(mainHtmlPath, (err, text) => {
-    if (err) res.send(JSON.stringify(err))
-    else res.send(text.toString())
-  })
-})
-
-for (let router of routers) {
+for (let router of routers)
   app.use(router)
-}
 
 const server = http.createServer(app)
-
 const io = socketio(server)
+
 io.on('connection', (socket) => {
-  for (let handler of sockets) {
+  for (let handler of sockets)
     handler(socket)
-  }
 })
 
 server.listen(port, () => console.log(`Listening on port ${port}`))

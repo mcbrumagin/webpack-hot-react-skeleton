@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "description": "Reactive, hot-reloading, skeleton web app",
   "main": "entry.js",
+  "config": {
+    "port": 3000,
+    "productionPort": 80
+  },
   "dependencies": {
     "axios": "^0.15.3",
     "express": "^4.14.0",
@@ -42,10 +46,10 @@
     "clean-modules": "rm -rf ./node_modules",
     "package": "npm run package-client && npm run package-assets && npm run package-server",
     "package-windows": "npm run package-client && npm run package-assets-windows && npm run package-server-windows",
-    "package-assets": "cp ./package.json ./prod/package.json && cp ./src/client/main.html ./prod/client/main.html",
-    "package-assets-windows": "copy .\\package.json .\\prod\\package.json && copy .\\src\\client\\main.html .\\prod\\client\\main.html",
-    "package-server": "NODE_ENV=production babel ./src/server --out-dir ./prod/server -s",
-    "package-server-windows": "set NODE_ENV=production&& babel ./src/server --out-dir ./prod/server -s",
+    "package-assets": "cp ./package.json ./prod/package.json && cp ./main.html ./prod/main.html",
+    "package-assets-windows": "copy .\\package.json .\\prod\\package.json && copy .\\main.html .\\prod\\main.html",
+    "package-server": "NODE_ENV=production babel ./src/server --out-dir ./prod/server -s && babel ./src/shared --out-dir ./prod/shared -s",
+    "package-server-windows": "set NODE_ENV=production&& babel ./src/server --out-dir ./prod/server -s && babel ./src/shared --out-dir ./prod/shared -s",
     "package-client": "webpack --config webpack.prod.config.js",
     "production": "npm install --production && NODE_ENV=production node ./server/main.js",
     "production-windows": "npm install --production && set NODE_ENV=production&& node ./server/main.js"
