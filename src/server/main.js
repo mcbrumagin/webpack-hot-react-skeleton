@@ -20,7 +20,7 @@ setTimeout(() => {
 */
 
 const app = express()
-let port: number
+let port
 
 if (process.env.NODE_ENV === 'production') {
   port = process.env.npm_package_config_productionPort || 80
@@ -48,4 +48,5 @@ io.on('connection', (socket) => {
     handler(socket)
 })
 
-server.listen(port, () => console.log(`Listening on port ${port}`))
+let listen: any = server.listen.bind(server) // TODO: Remove hack to mute flow error
+listen(port, () => console.log(`Listening on port ${port}`))

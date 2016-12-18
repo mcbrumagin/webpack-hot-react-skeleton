@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.15.3",
     "express": "^4.14.0",
+    "mongoose": "^4.7.2",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "rethinkdb": "^2.3.3",
