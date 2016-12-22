@@ -6,6 +6,8 @@ var config = {
   entry: [
     'webpack/hot/dev-server',
     'webpack-hot-middleware/client?reload=true',
+    'babel-polyfill',
+    './node_modules/pouchdb/dist/pouchdb.js',
     path.join(__dirname, './src/client/entry.jsx')
   ],
   output: {

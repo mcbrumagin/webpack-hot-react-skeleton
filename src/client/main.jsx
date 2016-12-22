@@ -2,9 +2,31 @@
 'use strict'
 
 import React from 'react'
+import PouchDB from 'pouchdb'
 
 import './main.css'
 import { isEmail } from '../shared/validators'
+
+
+const db = new PouchDB('http://localhost:5984/test')
+window.db = db
+
+async function getEmails() {
+  let emails
+  try {
+    emails = await db.get("emails")
+  } catch (err) {
+    console.log(err.message)
+    let response = await db.put({
+      _id: "emails", // TODO id instead of _id?
+      emails: []
+    })
+    emails = await db.get("emails")
+  }
+
+  if (!emails) throw new Error('Failed to initialize emails')
+  return emails
+}
 
 export default class App extends React.Component {
 
@@ -21,17 +43,36 @@ export default class App extends React.Component {
       form: { email: '' }
     }
 
-    window.socket.on('email:insert', (email) => {
-      this.state.emails.push(email)
+    //window.socket.on('email:insert', (email) => {
+    //  this.state.emails.push(email)
+    //  this.setState(this.state)
+    //})
+
+    getEmails().then((data) => {
+      this.state.data = data
+      this.state.emails = data.emails
       this.setState(this.state)
     })
+
+    db.changes({
+      since: 'now',
+      live: true,
+      include_docs: true
+    }).on('change', (change) => {
+      console.log({change})
+      if (change.id === 'emails') db.get("emails").then((data) => {
+        this.state.data = data
+        this.state.emails = data.emails
+        this.setState(this.state)
+      })
+    }).on('error', (err) => { console.error(err) })
   }
 
   renderEmailList() {
     return <ul>
       {
         this.state.emails.map((email) =>
-          <li key={email.id}>{email.email}</li>
+          <li key={email}>{email}</li>
         )
       }
     </ul>
@@ -54,10 +95,17 @@ export default class App extends React.Component {
     //axios.post('/validation-test', form)
     //  .then((res) => console.log(res))
 
-    window.socket.emit('email:client:insert', form)
+    //window.socket.emit('email:client:insert', form)
+
+    this.state.data.emails.push(form.email)
+    db.put(this.state.data).then((data) => {
+      this.state.data = data
+      this.state.emails = this.state.data.emails
+      this.setState(this.state)
+    })
   }
 
-  render() {
+  renderHello() {
     return <div className="content">
       <h1>Hello</h1>
       <form onSubmit={this.submitForm.bind(this)}>
@@ -70,5 +118,19 @@ export default class App extends React.Component {
       </form>
       {this.renderEmailList.call(this)}
     </div>
+  }
+
+  renderMedia() {
+    return <div className="content">
+      <button>Shuffle</button>
+      <button>Prev</button>
+      <button>Play</button>
+      <button>Next</button>
+      <button>Repeat</button>
+    </div>
+  }
+
+  render() {
+    return renderHello.call(this)
   }
 }

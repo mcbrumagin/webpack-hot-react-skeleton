@@ -1,6 +1,7 @@
 /* @flow */
 'use strict'
 
+import "babel-polyfill"
 import http from 'http'
 import express from 'express'
 import socketio from 'socket.io'
@@ -8,16 +9,6 @@ import socketio from 'socket.io'
 import routers from './routes/routers'
 import sockets from './sockets/sockets'
 
-/*
-// TODO: REMOVE
-import axios from 'axios'
-
-setTimeout(() => {
-  axios.get('http://127.0.0.1:3000/validation-lol', {email:'test@lolzzz'})
-    .then((res) => console.log('yeahhhhh', res))
-    .catch((err) => console.log('errrr', err.message, err.response.data))
-}, 5000)
-*/
 
 const app = express()
 let port
