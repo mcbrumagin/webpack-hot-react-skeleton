@@ -40,7 +40,8 @@ export default class App extends React.Component {
 
     this.state = {
       emails: [],
-      form: { email: '' }
+      form: { email: '' },
+      data: {}
     }
 
     //window.socket.on('email:insert', (email) => {
@@ -48,11 +49,11 @@ export default class App extends React.Component {
     //  this.setState(this.state)
     //})
 
-    getEmails().then((data) => {
+    getEmails().then(data => {
       this.state.data = data
       this.state.emails = data.emails
       this.setState(this.state)
-    })
+    }).catch(err => console.error(err))
 
     db.changes({
       since: 'now',
@@ -64,8 +65,8 @@ export default class App extends React.Component {
         this.state.data = data
         this.state.emails = data.emails
         this.setState(this.state)
-      })
-    }).on('error', (err) => { console.error(err) })
+      }).catch(err => console.error(err))
+    }).on('error', err => console.error(err))
   }
 
   renderEmailList() {
@@ -97,12 +98,21 @@ export default class App extends React.Component {
 
     //window.socket.emit('email:client:insert', form)
 
-    this.state.data.emails.push(form.email)
-    db.put(this.state.data).then((data) => {
-      this.state.data = data
-      this.state.emails = this.state.data.emails
-      this.setState(this.state)
+    if (this.state.data && this.state.data.emails) {
+      this.state.data.emails.push(form.email)
+    }
+
+    db.put(this.state.data)
+    .then(data => {
+      if (data) {
+        this.state.data = data
+        this.state.emails = this.state.data.emails
+        this.setState(this.state)
+      } else {
+        console.warn(data)
+      }
     })
+    .catch(err => console.error(err))
   }
 
   renderHello() {
@@ -131,6 +141,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    return renderHello.call(this)
+    return this.renderHello.call(this)
   }
 }
