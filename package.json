@@ -21,8 +21,7 @@
     "socket.io-client": "^1.7.2"
   },
   "devDependencies": {
-    "babel": "^6.23.0",
-    "babel-cli": "^6.18.0",
+    "babel-cli": "^6.23.0",
     "babel-core": "^6.18.2",
     "babel-loader": "^6.2.9",
     "babel-plugin-transform-flow-strip-types": "^6.18.0",
