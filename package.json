@@ -57,7 +57,7 @@
     "package-server": "NODE_ENV=production babel ./src/server --out-dir ./prod/server -s && babel ./src/shared --out-dir ./prod/shared -s",
     "package-server-windows": "set NODE_ENV=production&& babel ./src/server --out-dir ./prod/server -s && babel ./src/shared --out-dir ./prod/shared -s",
     "package-client": "webpack --config webpack.prod.config.js",
-    "production": "NODE_ENV=production node ./server/main.js &",
+    "production": "NODE_ENV=production node ./server/main.js",
     "production-windows": "set NODE_ENV=production&& node ./server/main.js"
   },
   "author": "",
