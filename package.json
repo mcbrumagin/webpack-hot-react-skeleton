@@ -44,7 +44,9 @@
   },
   "scripts": {
     "start": "webpack && babel-watch ./src/server/main.js",
+    "init": "npm run flow-init && npm run babel-init",
     "flow-init": "npm install -g flow-bin",
+    "babel-init": "npm install -g babel-cli",
     "test": "flow && echo \"Error: no test specified\" && exit 1",
     "clean": "npm run clean-prod && npm run clean-dev && npm run clean-modules",
     "clean-prod": "rm -rf ./prod",
